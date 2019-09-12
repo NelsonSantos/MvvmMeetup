@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:MvvmMeetup.ViewModels"
+             mc:Ignorable="d"
+             x:Class="MvvmMeetup.Views.ViewPedido"
+             x:Name="ViewPedidoName"
+             >
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="LabelTotal" TargetType="Label">
+                <Setter Property="TextColor" Value="Red" />
+            </Style>
+            <local:DecimalToColorConverter x:Key="DecimalToColorConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="{Binding NomeCliente, StringFormat='Cliente: {0}'}" Margin="5"></Label>
+            <ListView Margin="5" HasUnevenRows="True" ItemsSource="{Binding Produtos}" VerticalOptions="FillAndExpand">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout>
+                                <Label Text="{Binding NomeProduto, StringFormat='Nome do Produto: {0}'}" />
+                                <StackLayout Orientation="Horizontal">
+                                    <Label VerticalOptions="Center" Text="{Binding Quantidade, StringFormat='Quantidade: {0}'}" />
+                                    <StackLayout>
+                                        <Button HeightRequest="40" WidthRequest="40" 
+                                                Text="+" 
+                                                Command="{Binding Source={x:Reference ViewPedidoName}, Path=BindingContext.AumentaQuantidadeCommand}" 
+                                                CommandParameter="{Binding .}"
+                                                />
+                                        <Button HeightRequest="40" WidthRequest="40" 
+                                                Text="-" 
+                                                Command="{Binding Source={x:Reference ViewPedidoName}, Path=BindingContext.DiminuiQuantidadeCommand}" 
+                                                CommandParameter="{Binding .}"
+                                                />
+                                    </StackLayout>
+                                </StackLayout>
+                                
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Preco, StringFormat='Preço: R$ {0:N}'}" />
+                                            <Span Text="{Binding Total, StringFormat=' Total: R$ {0:N}'}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label Text="Sensor" TextColor="{Binding Total, 
+                                                    Converter={StaticResource DecimalToColorConverter}}" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackLayout Padding="5" BackgroundColor="Gray">
+                <Label FontAttributes="Bold" TextColor="White" HorizontalOptions="FillAndExpand" 
+                       HorizontalTextAlignment="End" 
+                       Text="{Binding TotalPedido, StringFormat='Total do Pedido: R$ {0:N}'}" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
